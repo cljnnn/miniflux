@@ -49,6 +49,7 @@ class Tag
         'td',
         'tbody',
         'thead',
+        'b',
         'h2',
         'h3',
         'h4',

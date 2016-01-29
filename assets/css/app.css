@@ -42,6 +42,7 @@ a:hover {
 }
 
 h1, h2, h3 {
+    line-height: 120%;
     font-weight: normal;
     color: #333;
 }
@@ -63,21 +64,13 @@ blockquote {
     border-left: 4px solid #ddd;
     padding-left: 25px;
     margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    color: #888;
-    line-height: 1.4em;
-    font-family: Georgia, serif;
+    line-height: 1.5em;
+    font-size: 0.9em;
 }
 
 q {
     color: purple;
     font-family: Georgia, serif;
-    font-style: italic;
-}
-
-blockquote + p {
-    color: #555;
     font-style: italic;
 }
 
@@ -91,7 +84,6 @@ table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    /* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=975632 */
     table-layout: fixed;
 }
 
@@ -126,7 +118,7 @@ pre, code {
 
 pre {
     padding: 10px;
-    overflow: auto;
+    overflow: scroll;
 }
 
 pre > code {
@@ -594,10 +586,9 @@ nav .active a {
     padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 50px;
-    color: #555;
-    font-family: Georgia, serif;
+    font-family: Georgia, "Microsoft YaHei", STXihei, sans-serif;
     line-height: 1.6em;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
 .item h2,
@@ -613,7 +604,20 @@ nav .active a {
 
 .item p {
     margin-bottom: 20px;
+    text-indent: 2em;
     overflow: auto;
+    text-align:justify;
+}
+
+.item br {
+    content: "A";
+    display: block;
+    margin-bottom:1.5em;
+}
+
+.item strong,
+.item b {
+    color: #000;
 }
 
 .item ul {
@@ -638,8 +642,10 @@ nav .active a {
 .item p img {
     margin-top: 10px;
     margin-bottom: 10px;
-    display: block;
-    max-width: 100%;
+    display: inline;
+    max-width: 90%;
+    text-align: center;
+    margin: 0 auto;
 }
 
 #item-content h1 img,
@@ -650,9 +656,18 @@ nav .active a {
     margin: 0;
 }
 
+/**
+#item-content span {
+    color: #339966;
+    font-size: 1.2em;
+}
+**/
+
 .item h1 a {
-    font-size: 2.1em;
+    font-size: 1.7em;
+    line-height: 120%;
     text-decoration: none;
+    font-family: serif;
 }
 
 #item-content a:visited {
@@ -772,7 +787,8 @@ section li {
 
 video,
 iframe {
-    max-width: 98%;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .menu-more li {

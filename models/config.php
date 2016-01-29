@@ -52,6 +52,12 @@ function get_iframe_whitelist()
         'https://www.youtube.com',
         'http://player.vimeo.com',
         'https://player.vimeo.com',
+        'http://player.youku.com',
+        'https://player.youku.com',
+        'http://v.qq.com',
+        'https://v.qq.com',
+        'http://music.163.com',
+        'https://music.163.com',
         'http://www.dailymotion.com',
         'https://www.dailymotion.com',
     );

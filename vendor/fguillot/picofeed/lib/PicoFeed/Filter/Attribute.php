@@ -51,6 +51,7 @@ class Attribute
         'td' => array(),
         'tbody' => array(),
         'thead' => array(),
+        'b' => array(),
         'h2' => array(),
         'h3' => array(),
         'h4' => array(),
@@ -127,6 +128,12 @@ class Attribute
         'https://www.youtube.com',
         'http://player.vimeo.com',
         'https://player.vimeo.com',
+        'http://player.youku.com',
+        'https://player.youku.com',
+        'http://v.qq.com',
+        'https://v.qq.com',
+        'http://music.163.com',
+        'https://music.163.com',
         'http://www.dailymotion.com',
         'https://www.dailymotion.com',
     );
@@ -221,8 +228,9 @@ class Attribute
         'filterBlacklistResourceAttribute',
         'filterProtocolUrlAttribute',
         'rewriteImageProxyUrl',
-        'secureIframeSrc',
+        //'secureIframeSrc',
         'removeYouTubeAutoplay',
+        //'trimContent',
     );
 
     /**
@@ -351,6 +359,24 @@ class Attribute
     {
         if ($this->isResource($attribute)) {
             $value = Url::resolve($value, $this->website);
+        }
+
+        return true;
+    }
+
+    /**
+     * trim the content
+     *
+     * @param string $tag       Tag name
+     * @param string $attribute Attribute name
+     * @param string $value     Attribute value
+     *
+     * @return bool
+     */
+    public function trimContent($tag, $attribute, &$value)
+    {
+        if ($tag === 'p'){
+            $value = trim($value);
         }
 
         return true;

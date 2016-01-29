@@ -144,6 +144,7 @@ class Html
     public function preFilter()
     {
         $this->input = $this->tag->removeBlacklistedTags($this->input);
+	//$this->input = str_replace("<br/>", "</p><p>", $this->input);
     }
 
     /**
@@ -154,7 +155,6 @@ class Html
         $this->output = $this->tag->removeEmptyTags($this->output);
         $this->output = $this->filterRules($this->output);
         $this->output = $this->tag->removeMultipleBreakTags($this->output);
-        $this->output = trim($this->output);
     }
 
     /**
@@ -238,6 +238,7 @@ class Html
     {
         // Replace &nbsp; with normal space
         $content = str_replace("\xc2\xa0", ' ', $content);
+        $content = trim($content);
         $this->output .= Filter::escape($content);
     }
 }
