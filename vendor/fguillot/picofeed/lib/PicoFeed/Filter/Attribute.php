@@ -136,6 +136,8 @@ class Attribute
         'https://music.163.com',
         'http://www.dailymotion.com',
         'https://www.dailymotion.com',
+        'http://vk.com',
+        'https://vk.com',
     );
 
     /**
