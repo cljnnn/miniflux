@@ -69,7 +69,7 @@ class Attribute
         'br' => array(),
         'del' => array(),
         'a' => array('href'),
-        'img' => array('src', 'title', 'alt'),
+        'img' => array('src', 'title', 'alt', 'width', 'height'),
         'figure' => array(),
         'figcaption' => array(),
         'cite' => array(),
