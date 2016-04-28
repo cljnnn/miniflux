@@ -357,17 +357,27 @@ a.btn-red:hover,
 }
 
 /* icons */
-article[data-item-status="read"] .read-icon:before {
-    content: "✔";
+article .read-icon,
+article .bookmark-icon {
+    cursor: pointer;
+    color: #aaa;
+    font-weight: 200;
+}
+
+article[data-item-bookmark="0"] .bookmark-icon:before {
+    content: "☆";
 }
 
 article[data-item-bookmark="1"] .bookmark-icon:before {
     content: "★";
 }
 
-/* not bookmarked icon only in article view */
-article[data-item-bookmark="0"] .item-infos .bookmark-icon:before {
-    content: "☆";
+article[data-item-status="read"] .read-icon:before {
+    content: "✘";
+}
+
+article[data-item-status="unread"] .read-icon:before {
+    content: "✔";
 }
 
 /* counter brackets */
@@ -759,16 +769,6 @@ ul.item-infos {
     text-align: center;
 }
 
-a.icon {
-    color: #333;
-    text-decoration: none;
-}
-
-a.icon:focus,
-a.icon:hover {
-    color: #000;
-}
-
 #item-content-enclosure {
     border-bottom: 1px dashed #ccc;
     margin-bottom: 20px;
@@ -802,6 +802,36 @@ iframe {
 .menu-more a {
     text-decoration: none;
     color: #333;
+}
+
+#help-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    overflow: auto;
+    background: #f0f0f0;
+    box-shadow: 2px 0px 5px 0 #ccc;
+}
+
+#help-layer .panel {
+    border: 0;
+}
+
+.btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font: 28px/1 sans-serif;
+    color: #ccc;
+    padding:0 .2em;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.btn-close:hover {
+    color: #999;
 }
 
 #login {
@@ -941,5 +971,24 @@ html[dir="rtl"] span.items-count:before {
 
     section li {
         font-size: 0.85em;
+    }
+
+    .item-icons {
+        display: block;
+        float: right;
+    }
+
+    .item-title {
+        display: block;
+    }
+
+    .item-icons .read-icon,
+    .item-icons .bookmark-icon {
+        font-size: 1.7em;
+        margin-left: 15px;
+    }
+
+    .item-infos .bookmark-icon {
+        font-size: 2.0em;
     }
 }

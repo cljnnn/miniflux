@@ -5,7 +5,13 @@ namespace Schema;
 use PDO;
 use Model\Config;
 
-const VERSION = 43;
+const VERSION = 44;
+
+
+function version_44(PDO $pdo)
+{
+    $pdo->exec('INSERT INTO settings ("key", "value") VALUES ("item_title_link", "full")');
+}
 
 function version_43(PDO $pdo)
 {
@@ -297,13 +303,9 @@ function version_11(PDO $pdo)
     $items = $rq->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($items as $item) {
-
         if ($item['id'] !== $item['item_url']) {
-
             $id = hash('crc32b', $item['id'].$item['site_url']);
-        }
-        else {
-
+        } else {
             $id = hash('crc32b', $item['item_url'].$item['site_url']);
         }
 

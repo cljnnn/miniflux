@@ -7,10 +7,13 @@
     <?= $hide ? 'data-hide="true"' : '' ?>
     >
     <h2 <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>>
-        <span class="bookmark-icon"></span>
-        <span class="read-icon"></span>
+        <span class="item-icons">
+            <?= \Template\load('bookmark_links', array('item' => $item, 'menu' => $menu, 'offset' => $offset, 'source' => '')) ?>
+            <?= \Template\load('status_links', array('item' => $item, 'redirect' => $menu, 'offset' => $offset)) ?>
+        </span>
+        <span class="item-title">
         <?= Helper\favicon($favicons, $item['feed_id']) ?>
-        <?php if ($display_mode === 'full'): ?>
+        <?php if ($display_mode === 'full' || $item_title_link == 'original'): ?>
             <a class="original" rel="noreferrer" target="_blank"
                href="<?= $item['url'] ?>"
                <?= ($original_marks_read) ? 'data-action="mark-read"' : '' ?>
@@ -23,6 +26,7 @@
                 title="<?= Helper\escape($item['title']) ?>"
             ><?= Helper\escape($item['title']) ?></a>
         <?php endif ?>
+        </span>
     </h2>
     <ul class="item-menu">
          <?php if ($menu !== 'feed-items'): ?>
@@ -42,7 +46,7 @@
         <li class="hide-mobile">
             <span title="<?= dt('%e %B %Y %k:%M', $item['updated']) ?>"><?= Helper\relative_time($item['updated']) ?></span>
         </li>
-        <?php if ($display_mode === 'full'): ?>
+        <?php if ($display_mode === 'full' || $item_title_link == 'original'): ?>
             <li>
                 <a
                     href="?action=show&amp;menu=<?= $menu ?><?= isset($group_id) ? '&amp;group_id='.$group_id : '' ?>&amp;id=<?= $item['id'] ?>"
@@ -67,8 +71,13 @@
             <?php endif ?>
             </li>
         <?php endif ?>
-        <?= \Template\load('bookmark_links', array('item' => $item, 'menu' => $menu, 'offset' => $offset, 'source' => '')) ?>
-        <?= \Template\load('status_links', array('item' => $item, 'redirect' => $menu, 'offset' => $offset)) ?>
+        <li class="hide-mobile">
+            <a
+                href="?action=mark-item-removed&amp;id=<?= $item['id'] ?>&amp;offset=<?= $offset ?>&amp;redirect=<?= $menu ?>&amp;feed_id=<?= $item['feed_id'] ?>"
+                data-action="mark-removed"
+                class="delete"
+            ><?= t('remove') ?></a>
+        </li>
     </ul>
     <?php if ($display_mode === 'full'): ?>
         <div class="preview-full-content" <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>><?= $item['content'] ?></div>

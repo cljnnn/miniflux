@@ -1,10 +1,10 @@
 <?php
 
-use PicoFeed\Syndication\Atom;
+use PicoFeed\Syndication\AtomFeedBuilder;
+use PicoFeed\Syndication\AtomItemBuilder;
 
 // Ajax call to add or remove a bookmark
-Router\post_action('bookmark', function() {
-
+Router\post_action('bookmark', function () {
     $id = Request\param('id');
     $value = Request\int_param('value');
 
@@ -16,8 +16,7 @@ Router\post_action('bookmark', function() {
 });
 
 // Add new bookmark
-Router\get_action('bookmark', function() {
-
+Router\get_action('bookmark', function () {
     $id = Request\param('id');
     $menu = Request\param('menu', 'unread');
     $source = Request\param('source', 'unread');
@@ -27,18 +26,28 @@ Router\get_action('bookmark', function() {
     Model\Item\set_bookmark_value($id, Request\int_param('value'));
 
     if ($source === 'show') {
-        Response\Redirect('?action=show&menu='.$menu.'&id='.$id);
+        Response\redirect('?action=show&menu='.$menu.'&id='.$id);
     }
 
-    Response\Redirect('?action='.$menu.'&offset='.$offset.'&feed_id='.$feed_id.'#item-'.$id);
+    Response\redirect('?action='.$menu.'&offset='.$offset.'&feed_id='.$feed_id.'#item-'.$id);
 });
 
 // Display bookmarks page
-Router\get_action('bookmarks', function() {
-
+Router\get_action('bookmarks', function () {
     $offset = Request\int_param('offset', 0);
-    $nb_items = Model\Item\count_bookmarks();
-    $items = Model\Item\get_bookmarks($offset, Model\Config\get('items_per_page'));
+    $group_id = Request\int_param('group_id', null);
+    $feed_ids = array();
+
+    if (! is_null($group_id)) {
+        $feed_ids = Model\Group\get_feeds_by_group($group_id);
+    }
+
+    $nb_items = Model\Item\count_bookmarks($feed_ids);
+    $items = Model\Item\get_bookmarks(
+        $offset,
+        Model\Config\get('items_per_page'),
+        $feed_ids
+    );
 
     Response\html(Template\layout('bookmarks', array(
         'favicons' => Model\Favicon\get_item_favicons($items),
@@ -46,6 +55,8 @@ Router\get_action('bookmarks', function() {
         'order' => '',
         'direction' => '',
         'display_mode' => Model\Config\get('items_display_mode'),
+        'item_title_link' => Model\Config\get('item_title_link'),
+        'group_id' => $group_id,
         'items' => $items,
         'nb_items' => $nb_items,
         'offset' => $offset,
@@ -53,15 +64,16 @@ Router\get_action('bookmarks', function() {
         'nothing_to_read' => Request\int_param('nothing_to_read'),
         'nb_unread_items' => Model\Item\count_by_status('unread'),
         'menu' => 'bookmarks',
+        'groups' => Model\Group\get_all(),
         'title' => t('Bookmarks').' ('.$nb_items.')'
     )));
 });
 
 // Display bookmark feeds
-Router\get_action('bookmark-feed', function() {
-
+Router\get_action('bookmark-feed', function () {
     // Select database if the parameter is set
     $database = Request\param('database');
+
     if (!empty($database)) {
         Model\Database\select($database);
     }
@@ -75,25 +87,30 @@ Router\get_action('bookmark-feed', function() {
     }
 
     // Build Feed
-    $writer = new Atom;
-    $writer->title = t('Bookmarks').' - Miniflux';
-    $writer->site_url = Helper\get_current_base_url();
-    $writer->feed_url = $writer->site_url.'?action=bookmark-feed&token='.urlencode($feed_token);
-
     $bookmarks = Model\Item\get_bookmarks();
 
+    $feedBuilder = AtomFeedBuilder::create()
+        ->withTitle(t('Bookmarks').' - Miniflux')
+        ->withFeedUrl(Helper\get_current_base_url().'?action=bookmark-feed&token='.urlencode($feed_token))
+        ->withSiteUrl(Helper\get_current_base_url())
+        ->withDate(new DateTime())
+    ;
+
     foreach ($bookmarks as $bookmark) {
-
         $article = Model\Item\get($bookmark['id']);
+        $articleDate = new DateTime();
+        $articleDate->setTimestamp($article['updated']);
 
-        $writer->items[] = array(
-            'id' => $article['id'],
-            'title' => $article['title'],
-            'updated' => $article['updated'],
-            'url' => $article['url'],
-            'content' => $article['content'],
-        );
+        $feedBuilder
+            ->withItem(AtomItemBuilder::create($feedBuilder)
+                ->withId($article['id'])
+                ->withTitle($article['title'])
+                ->withUrl($article['url'])
+                ->withUpdatedDate($articleDate)
+                ->withPublishedDate($articleDate)
+                ->withContent($article['content'])
+            );
     }
 
-    Response\xml($writer->execute());
+    Response\xml($feedBuilder->build());
 });

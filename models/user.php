@@ -24,11 +24,19 @@ function logout()
 }
 
 // Get the credentials from the current selected database
-function getCredentials()
+function get_credentials()
 {
     return Database::getInstance('db')
         ->hashtable('settings')
         ->get('username', 'password');
+}
+
+// Set last login date
+function set_last_login()
+{
+    return Database::getInstance('db')
+        ->hashtable('settings')
+        ->put(array('last_login' => time()));
 }
 
 // Validate authentication
@@ -44,11 +52,10 @@ function validate_login(array $values)
     $errors = $v->getErrors();
 
     if ($result) {
-
-        $credentials = getCredentials();
+        $credentials = get_credentials();
 
         if ($credentials && $credentials['username'] === $values['username'] && password_verify($values['password'], $credentials['password'])) {
-
+            set_last_login();
             $_SESSION['loggedin'] = true;
             $_SESSION['config'] = Config\get_all();
 
@@ -57,9 +64,7 @@ function validate_login(array $values)
                 $cookie = RememberMe\create(DatabaseModel\select(), $values['username'], Config\get_ip_address(), Config\get_user_agent());
                 RememberMe\write_cookie($cookie['token'], $cookie['sequence'], $cookie['expiration']);
             }
-        }
-        else {
-
+        } else {
             $result = false;
             $errors['login'] = t('Bad username or password');
         }
