@@ -791,6 +791,30 @@ iframe {
     margin-right: 15px;
 }
 
+.search {
+    text-align: right;
+}
+
+#search-opener {
+    color: #777;
+    font-size: 87.5%;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+#search-opener:hover {
+    color: #333;
+}
+
+#search-form {
+    border: 0;
+    padding: 0;
+}
+
+#search-form input {
+    font-size: 75%;
+}
+
 .menu-more li {
     font-size: 1.1em;
     padding-top: 10px;
@@ -909,6 +933,10 @@ html[dir="rtl"] span.items-count:before {
         overflow: hidden;
         white-space: nowrap;
     }
+
+    .search {
+        margin-top: -30px;
+    }
 }
 
 /* mobile design */
@@ -971,6 +999,11 @@ html[dir="rtl"] span.items-count:before {
 
     section li {
         font-size: 0.85em;
+    }
+
+    #search-form input {
+        box-sizing: border-box;
+        width: 100%;
     }
 
     .item-icons {
