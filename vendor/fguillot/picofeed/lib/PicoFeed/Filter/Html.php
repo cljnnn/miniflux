@@ -238,6 +238,7 @@ class Html
     {
         // Replace &nbsp; with normal space
         $content = str_replace("\xc2\xa0", ' ', $content);
+        $content = str_replace("　", ' ', $content);
         $content = trim($content);
         $this->output .= Filter::escape($content);
     }

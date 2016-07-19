@@ -245,6 +245,6 @@ return array(
     // 'Item title links to' => '',
     // 'Original' => '',
     // 'Last login:' => '',
-    // 'Search' => '',
-    // 'There are no results for your search' => '',
+    'Search' => '搜索',
+    'There are no results for your search' => '没有找到你想要的结果'
 );

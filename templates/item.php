@@ -82,6 +82,6 @@
     <?php if ($display_mode === 'full'): ?>
         <div class="preview-full-content" <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>><?= $item['content'] ?></div>
     <?php else: ?>
-        <p class="preview" <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>><?= Helper\escape(Helper\summary(strip_tags($item['content']), 10, 100)) ?></p>
+        <p class="preview" <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>><?= Helper\escape(Helper\summary(strip_tags($item['content']), 10, 500)) ?></p>
     <?php endif ?>
 </article>
