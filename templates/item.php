@@ -8,8 +8,20 @@
     >
     <h2 <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>>
         <span class="item-icons">
-            <?= \Template\load('bookmark_links', array('item' => $item, 'menu' => $menu, 'offset' => $offset, 'source' => '')) ?>
-            <?= \Template\load('status_links', array('item' => $item, 'redirect' => $menu, 'offset' => $offset)) ?>
+            <a
+                class="bookmark-icon"
+                href="?action=bookmark&amp;value=<?= (int)!$item['bookmark'] ?>&amp;id=<?= $item['id'] ?>&amp;offset=<?= $offset ?>&amp;redirect=<?= $menu ?>&amp;feed_id=<?= $item['feed_id'] ?>"
+                title="<?= ($item['bookmark']) ? t('remove bookmark') : t('bookmark') ?>"
+                data-action="bookmark"
+                data-reverse-title="<?= ($item['bookmark']) ? t('bookmark') : t('remove bookmark') ?>"
+            ></a>
+            <a
+                class="read-icon"
+                href="?action=<?= ($item['status'] === 'unread') ? 'mark-item-read' : 'mark-item-unread' ?>&amp;id=<?= $item['id'] ?>&amp;offset=<?= $offset ?>&amp;redirect=<?= $menu ?>&amp;feed_id=<?= $item['feed_id'] ?>"
+                title="<?= ($item['status'] === 'unread') ? t('mark as read') : t('mark as unread') ?>"
+                data-action="<?= ($item['status'] === 'unread') ? 'mark-read' : 'mark-unread' ?>"
+                data-reverse-title="<?= ($item['status'] === 'unread') ? t('mark as unread') : t('mark as read') ?>"
+            ></a>
         </span>
         <span class="item-title">
         <?= Helper\favicon($favicons, $item['feed_id']) ?>
@@ -71,13 +83,8 @@
             <?php endif ?>
             </li>
         <?php endif ?>
-        <li class="hide-mobile">
-            <a
-                href="?action=mark-item-removed&amp;id=<?= $item['id'] ?>&amp;offset=<?= $offset ?>&amp;redirect=<?= $menu ?>&amp;feed_id=<?= $item['feed_id'] ?>"
-                data-action="mark-removed"
-                class="delete"
-            ><?= t('remove') ?></a>
-        </li>
+        <?= \Template\load('bookmark_links', array('item' => $item, 'menu' => $menu, 'offset' => $offset)) ?>
+        <?= \Template\load('status_links', array('item' => $item, 'menu' => $menu, 'offset' => $offset)) ?>
     </ul>
     <?php if ($display_mode === 'full'): ?>
         <div class="preview-full-content" <?= Helper\is_rtl($item) ? 'dir="rtl"' : 'dir="ltr"' ?>><?= $item['content'] ?></div>
