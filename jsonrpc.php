@@ -1,14 +1,14 @@
 <?php
 
-require __DIR__.'/common.php';
+require __DIR__.'/app/common.php';
 
 use JsonRPC\Server;
-use Model\Config;
+use Miniflux\Model;
 
 $server = new Server();
 
 $server->authentication(array(
-    Config\get('username') => Config\get('api_token')
+    Model\Config\get('username') => Model\Config\get('api_token')
 ));
 
 $procedureHandler = $server->getProcedureHandler();
@@ -129,32 +129,32 @@ $procedureHandler->withCallback('group.update_feed_groups', function($feed_id, $
 
 // Get all items for a specific feed
 $procedureHandler->withCallback('item.feed.list', function ($feed_id, $offset = null, $limit = null) {
-    return Model\Item\get_all_by_feed($feed_id, $offset, $limit);
+    return Model\ItemFeed\get_all_items($feed_id, $offset, $limit);
 });
 
 // Count all feed items
 $procedureHandler->withCallback('item.feed.count', function ($feed_id) {
-    return Model\Item\count_by_feed($feed_id);
+    return Model\ItemFeed\count_items($feed_id);
 });
 
 // Get all bookmark items
 $procedureHandler->withCallback('item.bookmark.list', function ($offset = null, $limit = null) {
-    return Model\Item\get_bookmarks($offset, $limit);
+    return Model\Bookmark\get_all_items($offset, $limit);
 });
 
 // Count bookmarks
 $procedureHandler->withCallback('item.bookmark.count', function () {
-    return Model\Item\count_bookmarks();
+    return Model\Bookmark\count_items();
 });
 
 // Add a bookmark
 $procedureHandler->withCallback('item.bookmark.create', function ($item_id) {
-    return Model\Item\set_bookmark_value($item_id, 1);
+    return Model\Bookmark\set_flag($item_id, 1);
 });
 
 // Remove a bookmark
 $procedureHandler->withCallback('item.bookmark.delete', function ($item_id) {
-    return Model\Item\set_bookmark_value($item_id, 0);
+    return Model\Bookmark\set_flag($item_id, 0);
 });
 
 // Get all unread items

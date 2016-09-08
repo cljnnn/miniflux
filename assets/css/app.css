@@ -584,6 +584,7 @@ nav .active a {
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;
+    text-indent: 0em;
 }
 
 /* item */
@@ -615,9 +616,9 @@ nav .active a {
 }
 
 .item br {
-    content: "A";
+    content: "  ";
     display: block;
-    margin-bottom:1.5em;
+    margin-bottom:0em;
 }
 
 .item strong,
@@ -645,10 +646,11 @@ nav .active a {
 #item-content > img,
 #item-content figure img,
 .item p img {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    display: inline;
-    max-width: 90%;
+    text-align:0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: block;
+    max-width: 98%;
     text-align: center;
     margin: 0 auto;
 }
@@ -658,6 +660,7 @@ nav .active a {
 #item-content h3 img,
 #item-content br + img {
     display: inline;
+    text-align:0px;
     margin: 0;
 }
 
