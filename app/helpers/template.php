@@ -54,11 +54,11 @@ function summary($value, $min_length = 5, $max_length = 120, $end = '[...]')
     $length = strlen($value);
 
     if ($length > $max_length) {
-        $max = strpos($value, ' ', $max_length);
+        $max = strpos($value, '。', $max_length);
         if ($max === false) {
             $max = $max_length;
         }
-        return substr($value, 0, $max).' '.$end;
+        return substr($value, 0, $max).'。'.$end;
     } elseif ($length < $min_length) {
         return '';
     }
