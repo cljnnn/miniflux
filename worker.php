@@ -1,7 +1,9 @@
 <?php
 
-use Pheanstalk\Pheanstalk;
+use Miniflux\Handler;
 use Miniflux\Model;
+use Miniflux\Session\SessionStorage;
+use Pheanstalk\Pheanstalk;
 
 require __DIR__.'/app/common.php';
 
@@ -9,40 +11,30 @@ if (php_sapi_name() !== 'cli') {
     die('This script can run only from the command line.'.PHP_EOL);
 }
 
-$options = getopt('', array(
-    'stop',
-));
-
-function check_job_left(Pheanstalk $connection, array $options)
-{
-    if (isset($options['stop'])) {
-        $queues = $connection->listTubes();
-
-        if (in_array(BEANSTALKD_QUEUE, $queues)) {
-            $stats = $connection->statsTube(BEANSTALKD_QUEUE);
-            echo 'Jobs in queue: ', $stats->current_jobs_ready, PHP_EOL;
-            (int) $stats->current_jobs_ready === 0 && exit(0);
-        } else {
-            echo 'No queue', PHP_EOL;
-            exit(0);
-        }
-    }
-}
-
 $connection = new Pheanstalk(BEANSTALKD_HOST);
-
-check_job_left($connection, $options);
+$session = SessionStorage::getInstance();
 
 while ($job = $connection->reserveFromTube(BEANSTALKD_QUEUE)) {
-    $feed_id = $job->getData();
+    $payload = unserialize($job->getData());
+    $start_time = microtime(true);
 
-    echo 'Processing feed_id=', $feed_id, PHP_EOL;
+    echo 'Processing feed_id=', $payload['feed_id'], ' for user_id=', $payload['user_id'];
+    $user = Model\User\get_user_by_id($payload['user_id']);
 
-    Model\Feed\refresh($feed_id);
-    Model\Item\autoflush_read();
-    Model\Item\autoflush_unread();
+    if (empty($user)) {
+        echo ', user not found (removed?)'.PHP_EOL;
+    } else {
+        $session->flush();
+        $session->setUser($user);
+
+        Handler\Feed\update_feed($payload['user_id'], $payload['feed_id']);
+        Model\Item\autoflush_read($payload['user_id']);
+        Model\Item\autoflush_unread($payload['user_id']);
+
+        echo ', duration='.(microtime(true) - $start_time).' seconds', PHP_EOL;
+
+        Miniflux\Helper\write_debug_file();
+    }
 
     $connection->delete($job);
-
-    check_job_left($connection, $options);
 }

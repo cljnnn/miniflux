@@ -316,8 +316,8 @@ ul#grouplist li {
     color: #333;
     border: 1px solid #ccc;
     background: #efefef;
-    padding: 5px 15px;
-    font-size: 90%;
+    padding: 3px 8px;
+    font-size: 1.1em;
     cursor: pointer;
     border-radius: 2px;
 }
@@ -358,6 +358,8 @@ article .bookmark-icon {
     color: #aaa !important;
     font-weight: 200 !important;
     text-decoration: none !important;
+    font-size: 1.7em;
+    margin-left: 15px;
 }
 
 article[data-item-bookmark="0"] .bookmark-icon:before {
@@ -435,6 +437,11 @@ header a {
     text-decoration: none;
 }
 
+nav .menu-more-switcher {
+    color: #777;
+    cursor: pointer;
+}
+
 nav .active a {
     color: #333;
     font-weight: bold;
@@ -502,12 +509,35 @@ nav .active a {
     visibility: hidden;
 }
 
+.feed-groups li {
+    display: inline;
+    margin-left: 0;
+}
+
+.feed-groups li a:after {
+    content: ', ';
+}
+
+.feed-groups li:last-child a:after {
+    content: '';
+}
+
+.feed-groups a {
+    color: #333;
+}
+
+.items .feed-groups a:focus,
+.items .feed-groups a:hover {
+    color: #777;
+    text-decoration: none;
+}
+
 /* items listing */
 .items article[data-feed-error] .feed-parsing-error {
     visibility: visible;
     color: #000;
     font-size: 0.7em;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 .items article {
@@ -531,6 +561,16 @@ nav .active a {
     margin: 0;
     padding: 0 0 2px;
     font-weight: bold;
+}
+
+.item-title {
+    display: block;
+    margin-right: 80px;
+}
+
+.item-icons {
+    display: block;
+    float: right;
 }
 
 .items a {
@@ -756,6 +796,11 @@ ul.item-infos {
     margin-bottom: 20px;
 }
 
+ul.item-infos .bookmark-icon {
+    font-size: 1.5em;
+    margin-left: 0;
+}
+
 #download-item {
     color: #000;
 }
@@ -813,7 +858,11 @@ iframe {
     font-size: 75%;
 }
 
-.menu-more li {
+#menu-more {
+    padding-top: 20px;
+}
+
+#menu-more li {
     font-size: 1.1em;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -821,9 +870,13 @@ iframe {
     list-style-type: none;
 }
 
-.menu-more a {
-    text-decoration: none;
+#menu-more li.active a {
     color: #333;
+}
+
+#menu-more a {
+    text-decoration: none;
+    color: #777;
     display: block;
 }
 
@@ -832,7 +885,7 @@ iframe {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 300px;
+    width: 350px;
     overflow: auto;
     background: #f0f0f0;
     box-shadow: 2px 0 5px 0 #ccc;
@@ -925,12 +978,6 @@ html[dir="rtl"] span.items-count:before {
         display: none;
     }
 
-    .items h2 {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
     .search {
         margin-top: -30px;
     }
@@ -974,11 +1021,6 @@ html[dir="rtl"] span.items-count:before {
         font-size: 0.75em;
     }
 
-    .item-infos {
-        font-size: 0.9em;
-        margin-bottom: 5px;
-    }
-
     .item nav a {
         font-weight: bold;
         text-decoration: none;
@@ -1002,24 +1044,5 @@ html[dir="rtl"] span.items-count:before {
     #search-form input {
         box-sizing: border-box;
         width: 100%;
-    }
-
-    .item-icons {
-        display: block;
-        float: right;
-    }
-
-    .item-title {
-        display: block;
-    }
-
-    .item-icons .read-icon,
-    .item-icons .bookmark-icon {
-        font-size: 1.7em;
-        margin-left: 15px;
-    }
-
-    .item-infos .bookmark-icon {
-        font-size: 2.0em;
     }
 }

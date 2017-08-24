@@ -11,13 +11,29 @@ if (php_sapi_name() !== 'cli') {
 
 $options = getopt('', array(
     'limit::',
+    'user::',
 ));
 
-$limit = ! empty($options['limit']) && ctype_digit($options['limit']) ? (int) $options['limit'] : Model\Feed\LIMIT_ALL;
+$limit = get_cli_option('limit', $options);
+$user_id = get_cli_option('user', $options);
 $connection = new Pheanstalk(BEANSTALKD_HOST);
 
-foreach (Model\Feed\get_ids($limit) as $feed_id) {
-    $connection
-        ->useTube(BEANSTALKD_QUEUE)
-        ->put($feed_id, Pheanstalk::DEFAULT_PRIORITY, Pheanstalk::DEFAULT_DELAY, BEANSTALKD_TTL);
+if ($user_id) {
+    $user_ids = array($user_id);
+} else {
+    $user_ids = Model\User\get_all_user_ids();
 }
+
+foreach ($user_ids as $user_id) {
+    foreach (Model\Feed\get_feed_ids_to_refresh($user_id, $limit) as $feed_id) {
+        $payload = serialize(array(
+            'feed_id' => $feed_id,
+            'user_id' => $user_id,
+        ));
+
+        $connection
+            ->useTube(BEANSTALKD_QUEUE)
+            ->put($payload, Pheanstalk::DEFAULT_PRIORITY, Pheanstalk::DEFAULT_DELAY, BEANSTALKD_TTL);
+    }
+}
+

@@ -2,7 +2,17 @@
 
 namespace Miniflux\Helper;
 
-use Miniflux\Model\Config;
+use Miniflux\Session\SessionStorage;
+
+function get_user_id()
+{
+    return SessionStorage::getInstance()->getUserId();
+}
+
+function is_admin()
+{
+    return SessionStorage::getInstance()->isAdmin();
+}
 
 function flash($type, $html)
 {
@@ -16,24 +26,29 @@ function flash($type, $html)
     return $data;
 }
 
-function is_rtl(array $item)
+function rtl(array $item)
 {
-    return ! empty($item['rtl']) || \PicoFeed\Parser\Parser::isLanguageRTL($item['language']);
+    if ($item['rtl'] == 1) {
+        return 'dir="rtl"';
+    }
+
+    return 'dir="ltr"';
 }
 
 function css()
 {
-    $theme = Config\get('theme');
+    $theme = config('theme');
 
     if ($theme !== 'original') {
         $css_file = THEME_DIRECTORY.'/'.$theme.'/css/app.css';
+        $css_url = THEME_URL_PATH.'/'.$theme.'/css/app.css';
 
         if (file_exists($css_file)) {
-            return $css_file.'?version='.filemtime($css_file);
+            return $css_url.'?version='.filemtime($css_file);
         }
     }
 
-    return 'assets/css/app.css?version='.filemtime('assets/css/app.css');
+    return 'assets/css/app.min.css?version='.filemtime('assets/css/app.min.css');
 }
 
 function format_bytes($size, $precision = 2)
@@ -104,4 +119,16 @@ function relative_time($timestamp, $fallback_date_format = '%e %B %Y %k:%M')
     }
 
     return \dt($fallback_date_format, $timestamp);
+}
+
+function link($label, $action, array $params = array())
+{
+    $params['action'] = $action;
+    return sprintf('<a href="?%s">%s</a>', http_build_query($params, '', '&amp;'), escape($label));
+}
+
+function button($type, $label, $action, array $params = array())
+{
+    $params['action'] = $action;
+    return sprintf('<a href="?%s" class="btn btn-%s">%s</a>', http_build_query($params, '', '&amp;'), $type, escape($label));
 }

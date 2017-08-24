@@ -8,6 +8,7 @@ Thumbs.db
 .*.swp
 *~
 *.lock
+!composer.lock
 .idea
 .buildpath
 .project
@@ -16,7 +17,10 @@ Thumbs.db
 *.sublime-workspace
 .nbproject
 nbproject
+node_modules
 config.php
+!vendor/miniflux/picofeed/lib/PicoFeed/Config/Config.php
+!app/helpers/*
 !app/models/*
 !app/controllers/*
 !app/templates/*
